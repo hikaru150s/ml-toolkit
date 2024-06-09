@@ -1,7 +1,7 @@
 import { UninitializedTreeError } from "./errors";
 
-type ValueLike = string | number | boolean | null | undefined
-type DataPoint = Record<string, ValueLike>;
+export type ValueLike = string | number | boolean | null | undefined
+export type DataPoint = Record<string, ValueLike>;
 
 interface TreeNode {
   attribute?: ValueLike;
@@ -144,5 +144,17 @@ export class DecisionTreeModel<
       throw new UninitializedTreeError();
     }
     return this.traverseTree(this.tree, data);
+  }
+
+  public test(dataset: T[]) {
+    let correct = 0;
+    for (const data of dataset) {
+      const predictedResult = this.predict(data);
+      const actualResult = data[this.target];
+      if (predictedResult === actualResult) {
+        correct++;
+      }
+    }
+    return correct / dataset.length;
   }
 }
